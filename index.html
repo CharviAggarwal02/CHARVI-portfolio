@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charvi Aggarwal - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #06b6d4;
+            --secondary: #8b5cf6;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f1f5f9;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-card {
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.1), 0 10px 10px -5px rgba(16, 185, 129, 0.04);
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid var(--primary);
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .skill-badge {
+            transition: all 0.3s ease;
+        }
+        
+        .skill-badge:hover {
+            background: linear-gradient(90deg, var(--secondary), var(--primary)) !important;
+            color: white !important;
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 2px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            top: 15px;
+            left: -12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            z-index: 2;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+        }
+        
+        .contact-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+        }
+        
+        .toast.error {
+            background: linear-gradient(90deg, #ef4444, #f97316);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center">
+            <i id="toast-icon" class="mr-3"></i>
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-gray-900/90 backdrop-blur-md z-50 py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold gradient-text">Charvi Aggarwal</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-8">
+                        <a href="#home" class="nav-link px-3 py-2 text-sm font-medium hover:text-emerald-400 transition-colors">Home</a>
+                        <a href="#projects" class="nav-link px-3 py-2 text-sm font-medium hover:text-emerald-400 transition-colors">Projects</a>
+                        <a href="#skills" class="nav-link px-3 py-2 text-sm font-medium hover:text-emerald-400 transition-colors">Skills</a>
+                        <a href="#education" class="nav-link px-3 py-2 text-sm font-medium hover:text-emerald-400 transition-colors">Education</a>
+                        <a href="#contact" class="nav-link px-3 py-2 text-sm font-medium hover:text-emerald-400 transition-colors">Contact</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800">
+            <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-3 rounded-md text-base font-medium hover:bg-gray-700">Home</a>
+                <a href="#projects" class="block px-3 py-3 rounded-md text-base font-medium hover:bg-gray-700">Projects</a>
+                <a href="#skills" class="block px-3 py-3 rounded-md text-base font-medium hover:bg-gray-700">Skills</a>
+                <a href="#education" class="block px-3 py-3 rounded-md text-base font-medium hover:bg-gray-700">Education</a>
+                <a href="#contact" class="block px-3 py-3 rounded-md text-base font-medium hover:bg-gray-700">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1 animate-on-scroll">
+                    <p class="text-emerald-400 text-sm font-mono mb-2">Welcome to my portfolio</p>
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4">Hi, I'm <span class="gradient-text">Charvi Aggarwal</span></h1>
+                    <h2 class="text-2xl md:text-3xl font-semibold mb-6">Final Year <span class="gradient-text">BTech Student</span></h2>
+                    <p class="text-gray-300 mb-8 max-w-lg text-lg">
+                        Aspiring Python developer passionate about AI/ML solutions. Currently pursuing B.Tech in Computer Science (Cyber Security Honors) from Raj Kumar Goel Institute of Technology, Ghaziabad (AKTU) with CGPA: 8.92.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#projects" class="btn-primary px-6 py-3 text-white rounded-md font-medium">View Projects</a>
+                        <a href="#contact" class="px-6 py-3 border border-emerald-400 text-emerald-400 rounded-md font-medium hover:bg-emerald-400 hover:text-gray-900 transition-colors">Contact Me</a>
+                    </div>
+                    <div class="typewriter text-emerald-400 text-lg mt-6">
+                        Python Developer | AI/ML Enthusiast | Problem Solver
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 flex justify-center animate-on-scroll">
+                    <div class="relative">
+                        <div class="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-indigo-500 to-emerald-400 rounded-full flex items-center justify-center">
+                            <!-- Static profile image -->
+                            <div class="w-60 h-60 md:w-72 md:h-72 rounded-full border-4 border-gray-900 overflow-hidden">
+                                <img src="Charvi.jpg" alt="Charvi Aggarwal" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 glass-card p-3 rounded-lg w-24">
+                            <p class="text-xs font-mono text-center">5+ Projects</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-gray-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="text-emerald-400 text-sm font-mono mb-2">MY WORK</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title">Featured <span class="gradient-text">Projects</span></h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Academic and personal projects demonstrating technical skills and problem-solving abilities.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700">
+                    <div class="h-48 overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-r from-indigo-500 to-emerald-400 flex items-center justify-center">
+                            <i class="fas fa-user-secret text-white text-6xl"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Face Recognition System</h3>
+                            <span class="text-xs bg-emerald-400/20 text-emerald-400 px-2 py-1 rounded">Python</span>
+                        </div>
+                        <p class="text-gray-300 text-sm mb-4">
+                            Real-time facial recognition system with 90%+ accuracy using OpenCV and machine learning.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-emerald-400 text-sm font-medium hover:underline">View Project →</a>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/CharviAggarwal02" class="text-gray-400 hover:text-emerald-400">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700">
+                    <div class="h-48 overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                            <i class="fas fa-robot text-white text-6xl"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">InfoMate College Chatbot</h3>
+                            <span class="text-xs bg-emerald-400/20 text-emerald-400 px-2 py-1 rounded">FastAPI</span>
+                        </div>
+                        <p class="text-gray-300 text-sm mb-4">
+                            FAQ chatbot handling 50+ college queries with >90% accuracy using FastAPI and responsive UI.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-emerald-400 text-sm font-medium hover:underline">View Project →</a>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/CharviAggarwal02/chatbot-infomate" class="text-gray-400 hover:text-emerald-400">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card bg-gray-800 rounded-xl overflow-hidden border border-gray-700">
+                    <div class="h-48 overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center">
+                            <i class="fas fa-tint text-white text-6xl"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Sankalp Blood Bank System</h3>
+                            <span class="text-xs bg-emerald-400/20 text-emerald-400 px-2 py-1 rounded">PHP</span>
+                        </div>
+                        <p class="text-gray-300 text-sm mb-4">
+                            Full-stack application with SMS/email notifications and inventory automation. Reduced manual coordination by 40%.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-emerald-400 text-sm font-medium hover:underline">View Project →</a>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/CharviAggarwal02/bloodbank" class="text-gray-400 hover:text-emerald-400">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="text-emerald-400 text-sm font-mono mb-2">WHAT I KNOW</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title">My <span class="gradient-text">Skills</span></h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Technical competencies developed through coursework, projects, and self-learning.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-xl font-semibold mb-6">Languages & Frameworks</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Python</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">C/C++</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">JavaScript</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">HTML/CSS</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">PHP</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">FastAPI</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Flask</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Django</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Scikit-learn</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">OpenCV</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Pandas</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">NumPy</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-6">Tools & Technologies</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">MySQL</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">MongoDB</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Git/GitHub</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Power BI</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Arduino</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">REST APIs</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Docker</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">CI/CD</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">AWS</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">TensorFlow</span>
+                        <span class="skill-badge px-4 py-2 bg-gray-800 rounded-full border border-gray-700">Linux</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-20 bg-gray-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="text-emerald-400 text-sm font-mono mb-2">MY JOURNEY</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title">Education & <span class="gradient-text">Experience</span></h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Academic background and professional experience.</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto relative">
+                <!-- Timeline line -->
+                <div class="timeline-line"></div>
+                
+                <!-- Timeline items -->
+                <div class="space-y-12 pl-8 relative">
+                    <!-- Education 1 -->
+                    <div class="glass-card p-6 rounded-xl relative">
+                        <div class="timeline-dot"></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">B.Tech in Computer Science (Cyber Security Honors)</h3>
+                            <span class="text-sm text-emerald-400 font-mono">2022 - Present</span>
+                        </div>
+                        <p class="text-gray-300 mb-2">Raj Kumar Goel Institute of Technology, Ghaziabad</p>
+                        <p class="text-gray-300 text-sm">
+                            CGPA: 8.92 | Coursework: Machine Learning, Web Development, Database Systems, Cyber Security
+                        </p>
+                    </div>
+
+                    <!-- Education 2 -->
+                    <div class="glass-card p-6 rounded-xl relative">
+                        <div class="timeline-dot"></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Higher Secondary (12<sup>th</sup>)</h3>
+                            <span class="text-sm text-emerald-400 font-mono">2022</span>
+                        </div>
+                        <p class="text-gray-300 mb-2">Dehradun Public School, Ghaziabad</p>
+                        <p class="text-gray-300 text-sm">
+                            93.8% in Science stream with Computer Science and Mathematics
+                        </p>
+                    </div>
+
+                    <!-- Experience 1 -->
+                    <div class="glass-card p-6 rounded-xl relative">
+                        <div class="timeline-dot"></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">AI/ML Intern</h3>
+                            <span class="text-sm text-emerald-400 font-mono">Jul 2025 - Present</span>
+                        </div>
+                        <p class="text-gray-300 mb-2">InLightn Tech (Remote)</p>
+                        <p class="text-gray-300 text-sm">
+                            Enhanced ML model accuracy by 35% using advanced algorithms and feature engineering
+                        </p>
+                    </div>
+
+                    <!-- Experience 2 -->
+                    <div class="glass-card p-6 rounded-xl relative">
+                        <div class="timeline-dot"></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Python Developer Intern</h3>
+                            <span class="text-sm text-emerald-400 font-mono">Jun 2025 – Jul 2025</span>
+                        </div>
+                        <p class="text-gray-300 mb-2">InnovateCloud Solutions (Remote)</p>
+                        <p class="text-gray-300 text-sm">
+                            Developed automation tools reducing processing time by 30%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="text-emerald-400 text-sm font-mono mb-2">GET IN TOUCH</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title">Contact <span class="gradient-text">Me</span></h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Feel free to reach out for collaborations or opportunities!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <form id="contact-form" action="https://formspree.io/f/xrblaenw" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium mb-2">Name *</label>
+                            <input type="text" id="name" name="name" required class="contact-input w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium mb-2">Email *</label>
+                            <input type="email" id="email" name="email" required class="contact-input w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent" placeholder="your.email@example.com">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" class="contact-input w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent" placeholder="Subject">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium mb-2">Message *</label>
+                            <textarea id="message" name="message" rows="5" required class="contact-input w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent" placeholder="Your message here..."></textarea>
+                        </div>
+                        <button type="submit" id="submit-btn" class="btn-primary w-full px-6 py-3 text-white rounded-md font-medium">
+                            Send Message
+                        </button>
+                        <div id="form-message" class="text-center py-3"></div>
+                    </form>
+                </div>
+                <div>
+                    <div class="glass-card p-8 rounded-xl h-full">
+                        <h3 class="text-xl font-bold mb-6">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 text-emerald-400">
+                                    <i class="fas fa-envelope text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Email</p>
+                                    <p class="text-gray-300">charviaggarwal20904@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 text-emerald-400">
+                                    <i class="fas fa-map-marker-alt text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Location</p>
+                                    <p class="text-gray-300">Ghaziabad, Uttar Pradesh, India</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 text-emerald-400">
+                                    <i class="fas fa-phone-alt text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium">Phone</p>
+                                    <p class="text-gray-300">(+91) 9958394401</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12">
+                            <h3 class="text-xl font-bold mb-6">Connect With Me</h3>
+                            <div class="flex space-x-6 justify-center">
+                                <a href="https://github.com/CharviAggarwal02" class="text-gray-400 hover:text-emerald-400 transition-colors text-3xl">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/in/charvi-aggarwal03/" class="text-gray-400 hover:text-emerald-400 transition-colors text-3xl">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors text-3xl">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors text-3xl">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-900 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center">
+                <div class="flex items-center mb-6">
+                    <span class="text-xl font-bold gradient-text">Charvi Aggarwal</span>
+                </div>
+                <div class="text-gray-400 text-sm mb-6">
+                    &copy; 2025 Charvi Aggarwal. All rights reserved.
+                </div>
+                <a href="#home" class="btn-primary px-6 py-3 text-white rounded-md font-medium flex items-center">
+                    <i class="fas fa-arrow-up mr-2"></i> Back to Top
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when links are clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+        
+        // Smooth scrolling for all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Form submission handling
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        contactForm.addEventListener('submit', function(e) {
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            // Form will be submitted to Formspree automatically
+            // We'll handle the success/error with Formspree's default behavior
+        });
+        
+        // After form submission, Formspree will redirect to a thank you page
+        // We'll handle it by showing a toast notification
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('success')) {
+            showToast('Your message has been sent successfully!', 'success');
+        }
+        
+        // Scroll animation for elements
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastMessage = document.getElementById('toast-message');
+            
+            // Set toast content
+            toastMessage.textContent = message;
+            
+            // Set icon and color based on type
+            if (type === 'success') {
+                toast.className = 'toast success show';
+                toastIcon.className = 'fas fa-check-circle';
+            } else {
+                toast.className = 'toast error show';
+                toastIcon.className = 'fas fa-exclamation-circle';
+            }
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Set your static image (replace with your actual image path)
+        window.addEventListener('DOMContentLoaded', function() {
+            // This is a placeholder - in production, use:
+            // document.querySelector('.profile-image').src = 'Charvi.jpg';
+        });
+    </script>
+</body>
+</html>
